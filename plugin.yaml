@@ -1,0 +1,96 @@
+# OpenSCAD Documentation Search Plugin for Fabrikator
+# Uses OpenAI Assistants API with Vector Store for semantic documentation search
+
+plugin:
+  name: OpenSCAD Documentation Search
+  slug: openscad-docs
+  version: 1.0.0
+  author: Fabrikator Team
+  description: |
+    Search OpenSCAD and BOSL2 documentation using AI-powered semantic search.
+    Uses OpenAI's Assistants API with Vector Store to find relevant documentation,
+    function signatures, examples, and usage notes.
+  tags:
+    - documentation
+    - search
+    - openscad
+    - bosl2
+    - reference
+  iconUrl: https://fabrikator.ai/icons/search-docs.png
+
+requirements:
+  apiKeys:
+    - name: OPENAI_API_KEY
+      description: OpenAI API key for Assistants API with file search
+      required: true
+      fallback: platform
+  environment:
+    - name: OPENSCAD_VECTOR_STORE_ID
+      description: OpenAI Vector Store ID containing indexed documentation
+      required: true
+
+capabilities:
+  prompts:
+    agents:
+      - agent: cad
+        position: append
+        priority: 50
+        content: |
+          ## OPENSCAD DOCUMENTATION SEARCH
+          
+          You can search the OpenSCAD documentation and BOSL2 library references:
+          
+          ```
+          call_plugin(
+            pluginSlug="openscad-docs",
+            toolName="search_docs",
+            args={
+              query: "BOSL2 attach function syntax"
+            }
+          )
+          ```
+          
+          **Best Practices:**
+          - Be specific with your query
+          - Prefix library-specific searches with the library name (e.g., "BOSL2 attach", "threads-scad metric bolt")
+          - The result includes signature, parameters, examples, and notes
+          
+          **Examples:**
+          - `query: "BOSL2 attach function syntax"` - Find BOSL2 attachment docs
+          - `query: "BOSL2 cyl cylinder with rounding"` - Find cylinder options
+          - `query: "threads-scad metric external thread"` - Find threading docs
+
+  tools:
+    - name: search_docs
+      description: |
+        Search OpenSCAD and BOSL2 documentation for functions, modules, and concepts.
+        Returns structured information including signature, parameters, examples, and notes.
+      parameters:
+        type: object
+        properties:
+          query:
+            type: string
+            description: |
+              The search query for the documentation. 
+              Be specific and include library name for library-specific features.
+              REQUIRED.
+          context:
+            type: string
+            description: Optional additional context for the search.
+        required:
+          - query
+        additionalProperties: false
+      execution:
+        type: docker
+        config:
+          image: ghcr.io/unforkableco/forge-plugins-searchdocs:latest
+          port: 8080
+          endpoint: /search_docs
+          timeout: 30000
+
+pricing:
+  model: free
+
+validation:
+  status: approved
+
