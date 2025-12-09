@@ -4,7 +4,6 @@
 plugin:
   name: OpenSCAD Documentation Search
   slug: openscad-docs
-  version: 1.0.0
   author: Fabrikator Team
   description: |
     Search OpenSCAD and BOSL2 documentation using AI-powered semantic search.
