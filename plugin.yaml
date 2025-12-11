@@ -37,7 +37,7 @@ capabilities:
         content: |
           ## OPENSCAD DOCUMENTATION SEARCH
           
-          You can search the OpenSCAD documentation and BOSL2 library references:
+          You can search the OpenSCAD documentation on available libraries:
           
           ```
           call_plugin(
@@ -48,6 +48,10 @@ capabilities:
             }
           )
           ```
+          When to use this plugin:
+          - Use documentation search strategically** - only for specific details you need (if search plugin is enabled).
+          - ALWAYS prefix with library name for library-specific features: "BOSL2 attach", "BOSL2 sweep", "threads-scad metric bolt"
+          - The Library Reference gives you the "what", documentation search gives you the "how". Libraries exist to solve common problems. Always check if a library provides a function before writing manual code. Library functions are typically more robust, better tested, and handle edge cases you might miss.
           
           **Best Practices:**
           - Be specific with your query
