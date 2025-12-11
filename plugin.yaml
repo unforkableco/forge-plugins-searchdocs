@@ -41,7 +41,7 @@ capabilities:
           
           ```
           call_plugin(
-            pluginSlug="openscad-docs",
+            pluginSlug="forge-plugins-searchdocs",
             toolName="search_docs",
             args={
               query: "BOSL2 attach function syntax"
