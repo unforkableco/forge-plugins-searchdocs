@@ -186,9 +186,12 @@ async function executeSearch(query: string, context?: string): Promise<{ answer:
     if (assistantMessage && assistantMessage.content[0]?.type === 'text') {
       const raw = assistantMessage.content[0].text.value;
       try {
-        answerPayload = JSON.parse(raw);
-      } catch {
-        console.warn('Failed to parse structured answer');
+        // Strip markdown code blocks if present
+        const jsonMatch = raw.match(/```json\n([\s\S]*?)\n```/) || raw.match(/```\n([\s\S]*?)\n```/) || [null, raw];
+        const jsonStr = jsonMatch[1] || raw;
+        answerPayload = JSON.parse(jsonStr);
+      } catch (e: any) {
+        console.warn('Failed to parse structured answer:', e.message);
         answerPayload = {
           signature: 'Unable to parse search result',
           parameters: raw,
@@ -217,9 +220,9 @@ async function executeSearch(query: string, context?: string): Promise<{ answer:
   }
 
   // Cache the result
-  searchCache.set(cacheKey, { 
-    result: { answer: answerPayload }, 
-    timestamp: Date.now() 
+  searchCache.set(cacheKey, {
+    result: { answer: answerPayload },
+    timestamp: Date.now()
   });
 
   return { answer: answerPayload, tokensUsed };
@@ -227,7 +230,7 @@ async function executeSearch(query: string, context?: string): Promise<{ answer:
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ 
+  res.json({
     status: 'healthy',
     service: 'search-docs-plugin',
     timestamp: new Date().toISOString()
