@@ -29,6 +29,12 @@ requirements:
       required: true
 
 capabilities:
+  executionDefaults:
+    type: docker
+    config:
+      image: ghcr.io/unforkableco/forge-plugins-searchdocs:latest
+      port: 8080
+
   prompts:
     agents:
       - agent: cad
@@ -84,10 +90,7 @@ capabilities:
           - query
         additionalProperties: false
       execution:
-        type: docker
         config:
-          image: ghcr.io/unforkableco/forge-plugins-searchdocs:latest
-          port: 8080
           endpoint: /search_docs
           timeout: 30000
 
